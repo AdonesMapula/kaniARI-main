@@ -1,11 +1,14 @@
 using UnityEngine;
+using System.Collections; 
+using UnityEngine.SceneManagement; 
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Stats")]
-    public float moveSpeed = 5f;      // Reduced speed
-    public float jumpForce = 8f;      // Reduced jump force
+    public float moveSpeed = 5f;
+    public float jumpForce = 8f;
     public float climbSpeed = 4f;
+    public int maxJumps = 2; // NEW: Easily change max jumps in the Inspector!
 
     [Header("Custom Controls")]
     public KeyCode moveLeftKey = KeyCode.A;
@@ -14,7 +17,7 @@ public class PlayerController : MonoBehaviour
     public KeyCode moveDownKey = KeyCode.S;
     public KeyCode jumpKey = KeyCode.Space;
     public KeyCode punchKey = KeyCode.E;
-    public KeyCode attackKey = KeyCode.Mouse0; // Left Click
+    public KeyCode attackKey = KeyCode.Mouse0; 
 
     [Header("Detection")]
     public Transform groundCheck;
@@ -27,6 +30,7 @@ public class PlayerController : MonoBehaviour
     private bool isClimbing;
     private int jumpCount = 0;
     private float defaultGravity;
+    private bool isDead = false; 
 
     void Start()
     {
@@ -34,12 +38,13 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         defaultGravity = rb.gravityScale;
 
-        // FIX FOR ROLLING: This stops the physics engine from rotating the sprite
         rb.freezeRotation = true; 
     }
 
     void Update()
     {
+        if (isDead) return; 
+
         HandleMovement();
         HandleJump();
         HandleClimbing();
@@ -53,12 +58,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(moveLeftKey))
         {
             xVelocity = -moveSpeed;
-            transform.localScale = new Vector3(-1, 1, 1); // Flip Left
+            transform.localScale = new Vector3(-1, 1, 1); 
         }
         else if (Input.GetKey(moveRightKey))
         {
             xVelocity = moveSpeed;
-            transform.localScale = new Vector3(1, 1, 1); // Flip Right
+            transform.localScale = new Vector3(1, 1, 1); 
         }
 
         rb.linearVelocity = new Vector2(xVelocity, rb.linearVelocity.y);
@@ -66,39 +71,47 @@ public class PlayerController : MonoBehaviour
     }
 
     void HandleJump()
-{
-    // 1. Check if we are touching the ground
-    isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
-    
-    // Update animations
-    anim.SetBool("isGrounded", isGrounded);
-    anim.SetFloat("yVelocity", rb.linearVelocity.y);
-
-    // 2. Reset jump count when grounded
-    if (isGrounded && rb.linearVelocity.y <= 0.1f) 
     {
-        jumpCount = 0;
-    }
-
-    // 3. Jump Trigger
-    if (Input.GetKeyDown(jumpKey))
-    {
-        // Check if grounded OR if we still have jumps left (e.g., jumpCount < 2 for double jump)
-        if (isGrounded || jumpCount < 150) 
+        // 1. Check if we are touching the ground
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+        
+        // Update animations
+        if (anim != null)
         {
-            // Apply jump force
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-            
-            // Trigger correct animation
-            if (isGrounded)
-                anim.SetTrigger("Player_jump");
-            else
-                anim.SetTrigger("Player_doublejump");
+            anim.SetBool("isGrounded", isGrounded);
+            anim.SetFloat("yVelocity", rb.linearVelocity.y);
+        }
 
-            jumpCount++;
+        // 2. Safely reset jump count when we land
+        // (We use a slightly higher number like 0.5f to account for physics jitters)
+        if (isGrounded && rb.linearVelocity.y <= 0.5f) 
+        {
+            jumpCount = 0;
+        }
+
+        // 3. Jump Trigger
+        if (Input.GetKeyDown(jumpKey))
+        {
+            if (isGrounded)
+            {
+                // -- GROUND JUMP --
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+                if (anim != null) anim.SetTrigger("Player_jump");
+                
+                // Explicitly set to 1 because we just used our first jump
+                jumpCount = 1; 
+            }
+            else if (jumpCount < maxJumps)
+            {
+                // -- AIR JUMP (Double Jump) --
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+                if (anim != null) anim.SetTrigger("Player_doublejump");
+                
+                // Increase the counter
+                jumpCount++; 
+            }
         }
     }
-}
 
     void HandleClimbing()
     {
@@ -123,7 +136,6 @@ public class PlayerController : MonoBehaviour
 
     void HandleActions()
     {
-        // Primary Attack
         if (Input.GetKeyDown(attackKey))
         {
             int attackNum = Random.Range(1, 4);
@@ -133,8 +145,25 @@ public class PlayerController : MonoBehaviour
                 anim.SetTrigger("Player_attack" + attackNum);
         }
 
-        // Punch Action
         if (Input.GetKeyDown(punchKey))
             anim.SetTrigger("Player_punch");
+    }
+
+    public void Die()
+    {
+        if (isDead) return; 
+
+        isDead = true;
+        rb.linearVelocity = Vector2.zero; 
+        
+        if (anim != null) anim.SetTrigger("Player_death"); 
+
+        StartCoroutine(RespawnRoutine());
+    }
+
+    private IEnumerator RespawnRoutine()
+    {
+        yield return new WaitForSeconds(1.5f); 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

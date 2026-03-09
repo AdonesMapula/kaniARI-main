@@ -1,10 +1,25 @@
 fileFormatVersion: 2
-guid: 7dd193a36a591cd4f8ab81faf8db073f
+guid: 04caecff6538029429c3dd699c6de98e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5393448996881579246
-    second: Hammer_0
+      213: -1160010366554915182
+    second: Dimensional_Portal_0
+  - first:
+      213: 5853386924358050850
+    second: Dimensional_Portal_1
+  - first:
+      213: 4392103141360296039
+    second: Dimensional_Portal_2
+  - first:
+      213: -1678251164886203106
+    second: Dimensional_Portal_3
+  - first:
+      213: 378231322344738570
+    second: Dimensional_Portal_4
+  - first:
+      213: -4773631299378667110
+    second: Dimensional_Portal_5
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,194 +111,137 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Hammer_0
+      name: Dimensional_Portal_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 32
-        height: 64
+        x: 8
+        y: 32
+        width: 18
+        height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: eec3055794169da40800000000000000
-      internalID: 5393448996881579246
+      spriteID: 29e39b5b7b0d6efe0800000000000000
+      internalID: -1160010366554915182
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hammer_1
+      name: Dimensional_Portal_1
       rect:
         serializedVersion: 2
-        x: 32
+        x: 8
         y: 0
-        width: 32
-        height: 64
+        width: 19
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 88923403f79631340acdb5814cf0d765
-      internalID: 2127768651
+      spriteID: 224274725686b3150800000000000000
+      internalID: 5853386924358050850
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hammer_2
+      name: Dimensional_Portal_2
       rect:
         serializedVersion: 2
-        x: 64
-        y: 0
-        width: 32
-        height: 64
+        x: 39
+        y: 32
+        width: 17
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 934f1a3bf7a9ac34a971402cbd27dcef
-      internalID: -519065101
+      spriteID: 76068a56982e3fc30800000000000000
+      internalID: 4392103141360296039
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hammer_3
+      name: Dimensional_Portal_3
       rect:
         serializedVersion: 2
-        x: 96
+        x: 40
         y: 0
-        width: 32
-        height: 64
+        width: 19
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 4958825a6c749be48a86520dd5647409
-      internalID: 1465856023
+      spriteID: e1582111577a5b8e0800000000000000
+      internalID: -1678251164886203106
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hammer_4
+      name: Dimensional_Portal_4
       rect:
         serializedVersion: 2
-        x: 128
-        y: 0
-        width: 32
-        height: 64
+        x: 71
+        y: 32
+        width: 19
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 5d1853b4edf4cf54f8e18d4464fee4a2
-      internalID: -1518113894
+      spriteID: a0fc84b326fbf3500800000000000000
+      internalID: 378231322344738570
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hammer_5
+      name: Dimensional_Portal_5
       rect:
         serializedVersion: 2
-        x: 160
+        x: 72
         y: 0
-        width: 32
-        height: 64
+        width: 19
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: abb9a09b38adf6242aa74b10f1c55a84
-      internalID: -2039730164
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hammer_6
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 0
-        width: 32
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9b43b2b07c787d24c88e557d4b9ab3cd
-      internalID: -767187702
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hammer_7
-      rect:
-        serializedVersion: 2
-        x: 224
-        y: 0
-        width: 32
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ed2219970cdbdf24999f1133453aadc8
-      internalID: -1419970881
+      spriteID: a9129dfff97a0cdb0800000000000000
+      internalID: -4773631299378667110
       vertices: []
       indices: 
       edges: []
@@ -292,7 +250,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: a7dd3063f1140e24b9cba6923dd50ad1
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -300,18 +258,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":1,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      Hammer_0: 5393448996881579246
-      Hammer_1: 2127768651
-      Hammer_2: -519065101
-      Hammer_3: 1465856023
-      Hammer_4: -1518113894
-      Hammer_5: -2039730164
-      Hammer_6: -767187702
-      Hammer_7: -1419970881
+      Dimensional_Portal_0: -1160010366554915182
+      Dimensional_Portal_1: 5853386924358050850
+      Dimensional_Portal_2: 4392103141360296039
+      Dimensional_Portal_3: -1678251164886203106
+      Dimensional_Portal_4: 378231322344738570
+      Dimensional_Portal_5: -4773631299378667110
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
