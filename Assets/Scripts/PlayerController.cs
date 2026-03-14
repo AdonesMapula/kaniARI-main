@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement; // Required for reloading the scene
 using System.Collections;
+
 public class PlayerController : MonoBehaviour
 {
     [Header("Respawn Settings")]
@@ -67,7 +68,7 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
         }
 
-        rb.velocity = new Vector2(xVelocity, rb.velocity.y);
+        rb.linearVelocity = new Vector2(xVelocity, rb.linearVelocity.y);
 
         if (anim != null)
             anim.SetBool("Player_run", xVelocity != 0);
@@ -80,12 +81,12 @@ public class PlayerController : MonoBehaviour
         if (anim != null)
         {
             anim.SetBool("isGrounded", isGrounded);
-            anim.SetFloat("yVelocity", rb.velocity.y);
+            anim.SetFloat("yVelocity", rb.linearVelocity.y);
         }
 
         if (Input.GetKeyDown(jumpKey) && isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
             if (anim != null)
                 anim.SetTrigger("Player_jump");
@@ -98,8 +99,8 @@ public class PlayerController : MonoBehaviour
         if (isDead) return;
 
         isDead = true;
-        rb.velocity = Vector2.zero;
-        
+        rb.linearVelocity = Vector2.zero;
+
         // Changing to 'Static' prevents the player from falling through the floor 
         // while the death animation plays
         rb.bodyType = RigidbodyType2D.Static;
