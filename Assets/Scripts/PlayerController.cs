@@ -8,10 +8,15 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 1.75f;
     public float jumpForce = 3.5f;
 
-    [Header("Custom Controls")]
+    [Header("Custom Keyboard Controls")]
     public KeyCode moveLeftKey = KeyCode.A;
     public KeyCode moveRightKey = KeyCode.D;
     public KeyCode jumpKey = KeyCode.Space;
+
+    [Header("Controller Settings")]
+    public string horizontalAxis = "Horizontal";
+    public string jumpButton = "Jump";
+    public float controllerDeadZone = 0.2f;
 
     [Header("Ground Detection")]
     public Transform groundCheck;
@@ -82,23 +87,38 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        float xVelocity = 0f;
+        float xInput = 0f;
 
+        // Keyboard input
         if (Input.GetKey(moveLeftKey))
         {
-            xVelocity = -moveSpeed;
-            transform.localScale = new Vector3(-1f, 1f, 1f);
+            xInput = -1f;
         }
         else if (Input.GetKey(moveRightKey))
         {
-            xVelocity = moveSpeed;
-            transform.localScale = new Vector3(1f, 1f, 1f);
+            xInput = 1f;
         }
 
+        // Controller input
+        float controllerInput = Input.GetAxisRaw(horizontalAxis);
+
+        // If controller is being used, override keyboard
+        if (Mathf.Abs(controllerInput) > controllerDeadZone)
+        {
+            xInput = controllerInput;
+        }
+
+        float xVelocity = xInput * moveSpeed;
         rb.velocity = new Vector2(xVelocity, rb.velocity.y);
 
+        // Flip sprite
+        if (xInput < -0.01f)
+            transform.localScale = new Vector3(-1f, 1f, 1f);
+        else if (xInput > 0.01f)
+            transform.localScale = new Vector3(1f, 1f, 1f);
+
         if (anim != null)
-            anim.SetBool("Player_run", xVelocity != 0f && isGrounded);
+            anim.SetBool("Player_run", Mathf.Abs(xInput) > 0.01f && isGrounded);
     }
 
     private void HandleJump()
@@ -114,7 +134,10 @@ public class PlayerController : MonoBehaviour
             anim.SetFloat("yVelocity", rb.velocity.y);
         }
 
-        if (Input.GetKeyDown(jumpKey) && isGrounded)
+        bool keyboardJump = Input.GetKeyDown(jumpKey);
+        bool controllerJump = Input.GetButtonDown(jumpButton);
+
+        if ((keyboardJump || controllerJump) && isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
 
@@ -201,7 +224,7 @@ public class PlayerController : MonoBehaviour
 
         anim.ResetTrigger("Player_death");
         anim.ResetTrigger("Player_jump");
-        anim.Play("Player_Idle", 0, 0f); // replace "Idle" with your actual idle state name
+        anim.Play("Player_Idle", 0, 0f);
         anim.SetBool("Player_run", false);
         anim.SetBool("isGrounded", true);
         anim.SetFloat("yVelocity", 0f);

@@ -138,6 +138,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -475,10 +488,10 @@ TextureImporter:
       name: Interface windows_15
       rect:
         serializedVersion: 2
-        x: 1354
+        x: 1339
         y: 164
-        width: 212
-        height: 38
+        width: 204
+        height: 35
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -537,6 +550,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Interface windows_18
+      rect:
+        serializedVersion: 2
+        x: 1329
+        y: 59
+        width: 223
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26536924b94faa64b9f942435b5395c7
+      internalID: -1233771573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -561,6 +596,7 @@ TextureImporter:
       Interface windows_15: 1099418987
       Interface windows_16: -93063301
       Interface windows_17: -1087764731
+      Interface windows_18: -1233771573
       Interface windows_2: 5442010213146667433
       Interface windows_3: 9078790117441612056
       Interface windows_4: 9079613762718912693
