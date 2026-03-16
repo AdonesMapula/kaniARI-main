@@ -253,7 +253,7 @@ AnimatorState:
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
-  m_CycleOffsetParameter: 
+  m_CycleOffsetParameter: yVelocity
   m_TimeParameter: 
 --- !u!91 &9100000
 AnimatorController:
@@ -433,7 +433,7 @@ AnimatorStateMachine:
     m_Position: {x: 240, y: 70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -548645384677286153}
-    m_Position: {x: 190, y: 300, z: 0}
+    m_Position: {x: 210, y: 270, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1793781355562624187}
     m_Position: {x: 390, y: 140, z: 0}

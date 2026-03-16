@@ -5,11 +5,11 @@ using System.Collections;
 public class GameOverOverlayController : MonoBehaviour
 {
     [Header("Restart")]
-    public string fallbackScene = "Town";
+    public string restartSceneName = "Dungeon_Level_2";
 
     [Header("Optional Prompt")]
     public GameObject pressSpacePrompt;
-    public float promptDelay = 0.5f; // delay before showing prompt
+    public float promptDelay = 0.5f;
 
     private bool canRestart;
 
@@ -25,7 +25,6 @@ public class GameOverOverlayController : MonoBehaviour
 
     private IEnumerator EnableRestartAfterDelay()
     {
-        // IMPORTANT: realtime, works even when Time.timeScale = 0
         yield return new WaitForSecondsRealtime(promptDelay);
 
         if (pressSpacePrompt != null)
@@ -41,12 +40,7 @@ public class GameOverOverlayController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Time.timeScale = 1f;
-
-            string targetScene = string.IsNullOrEmpty(GameOverState.lastGameplayScene)
-                ? fallbackScene
-                : GameOverState.lastGameplayScene;
-
-            SceneManager.LoadScene(targetScene, LoadSceneMode.Single);
+            SceneManager.LoadScene(restartSceneName, LoadSceneMode.Single);
         }
     }
 }
