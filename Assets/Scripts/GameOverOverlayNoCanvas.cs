@@ -4,6 +4,10 @@ using System.Collections;
 
 public class GameOverOverlayController : MonoBehaviour
 {
+    [Header("Controller Settings")]
+    public string horizontalAxis = "Horizontal";
+    public string jumpButton = "Jump";
+    public float controllerDeadZone = 0.2f;
     [Header("Restart")]
     public string restartSceneName = "Dungeon_Level_2";
 
@@ -37,7 +41,7 @@ public class GameOverOverlayController : MonoBehaviour
     {
         if (!canRestart) return;
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown(jumpButton))
         {
             Time.timeScale = 1f;
             SceneManager.LoadScene(restartSceneName, LoadSceneMode.Single);
