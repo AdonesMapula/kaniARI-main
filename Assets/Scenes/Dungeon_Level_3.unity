@@ -6985,6 +6985,9 @@ MonoBehaviour:
   moveLeftKey: 97
   moveRightKey: 100
   jumpKey: 32
+  horizontalAxis: Horizontal
+  jumpButton: Jump
+  controllerDeadZone: 0.2
   groundCheck: {fileID: 1680879239}
   groundLayer:
     serializedVersion: 2
@@ -16740,7 +16743,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f09f4dfabb71f240b7857eebd2f9d66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Portal
-  targetSceneName: Dungeon_Level_2
+  targetSceneName: Town
 --- !u!70 &2067843248
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -17396,7 +17399,6 @@ SceneRoots:
   - {fileID: 130243953}
   - {fileID: 1586336791}
   - {fileID: 1454073243}
-  - {fileID: 2067843246}
   - {fileID: 695215035}
   - {fileID: 2039422508}
   - {fileID: 1265524483}
@@ -17405,5 +17407,6 @@ SceneRoots:
   - {fileID: 1110258822}
   - {fileID: 467216741}
   - {fileID: 971848104}
+  - {fileID: 2067843246}
   - {fileID: 1698281881}
   - {fileID: 1064327072}

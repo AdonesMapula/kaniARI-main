@@ -3180,7 +3180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f09f4dfabb71f240b7857eebd2f9d66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Portal
-  targetSceneName: Dungeon_Level_3
+  targetSceneName: Town
 --- !u!70 &927531765
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
