@@ -7772,22 +7772,22 @@ MonoBehaviour:
   moveLeftKey: 97
   moveRightKey: 100
   jumpKey: 32
-  horizontalAxis: Horizontal
-  jumpButton: Jump
-  controllerDeadZone: 0.2
   groundCheck: {fileID: 1405670108}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  groundCheckRadius: 0.05
+  groundCheckRadius: 0.1
   maxHealth: 3
   damageCooldown: 1.5
-  heartIcons: []
+  heartsOnParent: {fileID: 0}
+  heartsOffParent: {fileID: 0}
   respawnPoint: {fileID: 0}
   respawnDelay: 1.5
   hitAnimationTime: 1.5
   gameOverDelay: 1.5
   gameOverSceneName: GameOver
+  deathCount: 0
+  deathCountText: {fileID: 0}
 --- !u!95 &248993603
 Animator:
   serializedVersion: 7
@@ -37386,7 +37386,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0
+  m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
   m_ApplyToSortingLayers: 00000000
@@ -37923,7 +37923,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.06481655, y: -0.004320979}
+  m_Offset: {x: 0.06481655, y: -0.16132092}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -37933,7 +37933,7 @@ BoxCollider2D:
     drawMode: 2
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.1903669, y: 3.8373845}
+  m_Size: {x: 0.1903669, y: 4.151384}
   m_EdgeRadius: 0
 --- !u!1 &1042299512
 GameObject:
@@ -39520,8 +39520,8 @@ Transform:
   m_GameObject: {fileID: 1078777491}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.260436, y: -7.039154, z: 0}
-  m_LocalScale: {x: 0.18820466, y: 0.2086926, z: 1}
+  m_LocalPosition: {x: 15.286, y: -6.974, z: 0}
+  m_LocalScale: {x: 0.2796533, y: 0.31009632, z: 1.4859}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -58501,7 +58501,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.065833166, y: -0.0048766136}
+  m_Offset: {x: -0.065833166, y: -0.15457416}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -58511,7 +58511,7 @@ BoxCollider2D:
     drawMode: 2
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.18833366, y: 3.8408775}
+  m_Size: {x: 0.18833366, y: 4.1402726}
   m_EdgeRadius: 0
 --- !u!1 &1655544845
 GameObject:
@@ -66844,6 +66844,7 @@ GameObject:
   - component: {fileID: 1925824653}
   - component: {fileID: 1925824652}
   - component: {fileID: 1925824655}
+  - component: {fileID: 1925824656}
   m_Layer: 0
   m_Name: lava_tile3_0 (14)
   m_TagString: Trap
@@ -66959,6 +66960,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5560e3b3e020c5341b57090c3b8834e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Obstacle
+--- !u!61 &1925824656
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1925824651}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -0.0049853325, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.64, y: 0.48}
+    newSize: {x: 8.32255, y: 0.48}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 2
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 8.263616, y: 0.48}
+  m_EdgeRadius: 0
 --- !u!1 &1928555470
 GameObject:
   m_ObjectHideFlags: 0

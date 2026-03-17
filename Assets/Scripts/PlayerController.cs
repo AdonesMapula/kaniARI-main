@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,15 +9,10 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 1.75f;
     public float jumpForce = 3.5f;
 
-    [Header("Custom Keyboard Controls")]
+    [Header("Custom Controls")]
     public KeyCode moveLeftKey = KeyCode.A;
     public KeyCode moveRightKey = KeyCode.D;
     public KeyCode jumpKey = KeyCode.Space;
-
-    [Header("Controller Settings")]
-    public string horizontalAxis = "Horizontal";
-    public string jumpButton = "Jump";
-    public float controllerDeadZone = 0.2f;
 
     [Header("Ground Detection")]
     public Transform groundCheck;
@@ -24,9 +20,16 @@ public class PlayerController : MonoBehaviour
     public float groundCheckRadius = 0.05f;
 
     [Header("Health")]
-    public int maxHealth = 3;
+    // maxHealth is automatically set to the number of heart segments found
+    // You can still override it here — it will be clamped to bar length
+    public int maxHealth = 10;
     public float damageCooldown = 1.5f;
-    public SpriteRenderer[] heartIcons;
+
+    [Header("Health Bar — assign the parent GameObjects")]
+    [Tooltip("Drag the 'heart_0' parent here (ON/filled hearts)")]
+    public Transform heartsOnParent;
+    [Tooltip("Drag the 'off' parent here (OFF/empty hearts)")]
+    public Transform heartsOffParent;
 
     [Header("Respawn")]
     public Transform respawnPoint;
@@ -36,6 +39,12 @@ public class PlayerController : MonoBehaviour
     [Header("Game Over Overlay")]
     public float gameOverDelay = 1.5f;
     public string gameOverSceneName = "GameOver";
+
+    [Header("Stats")]
+    public int deathCount = 0;
+
+    [Header("UI")]
+    public Text deathCountText;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -51,6 +60,48 @@ public class PlayerController : MonoBehaviour
     private RigidbodyType2D originalBodyType;
     private float defaultGravity;
 
+    private SpriteRenderer[] srOn;
+    private SpriteRenderer[] srOff;
+
+    private void Awake()
+    {
+        // --- Auto-find parents by name if not assigned in Inspector ---
+        if (heartsOnParent == null)
+        {
+            GameObject found = GameObject.Find("heart_0");
+            if (found != null) heartsOnParent = found.transform;
+        }
+        if (heartsOffParent == null)
+        {
+            GameObject found = GameObject.Find("off");
+            if (found != null) heartsOffParent = found.transform;
+        }
+
+        // Collect direct children only (not grandchildren) as SpriteRenderers
+        srOn = GetDirectChildRenderers(heartsOnParent);
+        srOff = GetDirectChildRenderers(heartsOffParent);
+
+        // Lock maxHealth to however many segments exist in the bar
+        int barLength = Mathf.Max(srOn.Length, srOff.Length);
+        if (barLength > 0)
+            maxHealth = barLength;
+
+        Debug.Log($"[HealthBar] ON segments: {srOn.Length} | OFF segments: {srOff.Length} | maxHealth set to: {maxHealth}");
+    }
+
+    private SpriteRenderer[] GetDirectChildRenderers(Transform parent)
+    {
+        if (parent == null) return new SpriteRenderer[0];
+
+        var list = new System.Collections.Generic.List<SpriteRenderer>();
+        foreach (Transform child in parent)
+        {
+            SpriteRenderer sr = child.GetComponent<SpriteRenderer>();
+            if (sr != null) list.Add(sr);
+        }
+        return list.ToArray();
+    }
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -64,7 +115,8 @@ public class PlayerController : MonoBehaviour
         startPosition = transform.position;
 
         currentHealth = maxHealth;
-        UpdateHeartsUI();
+        UpdateHealthBar();
+        UpdateDeathUI();
 
         if (coll != null)
         {
@@ -80,45 +132,35 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (isDead) return;
-
         HandleMovement();
         HandleJump();
     }
 
     private void HandleMovement()
     {
-        float xInput = 0f;
+        float xVelocity = 0f;
 
-        // Keyboard input
         if (Input.GetKey(moveLeftKey))
         {
-            xInput = -1f;
+            xVelocity = -moveSpeed;
+            transform.localScale = new Vector3(-1f, 1f, 1f);
         }
         else if (Input.GetKey(moveRightKey))
         {
-            xInput = 1f;
-        }
-
-        // Controller input
-        float controllerInput = Input.GetAxisRaw(horizontalAxis);
-
-        // If controller is being used, override keyboard
-        if (Mathf.Abs(controllerInput) > controllerDeadZone)
-        {
-            xInput = controllerInput;
-        }
-
-        float xVelocity = xInput * moveSpeed;
-        rb.velocity = new Vector2(xVelocity, rb.velocity.y);
-
-        // Flip sprite
-        if (xInput < -0.01f)
-            transform.localScale = new Vector3(-1f, 1f, 1f);
-        else if (xInput > 0.01f)
+            xVelocity = moveSpeed;
             transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+
+        rb.linearVelocity = new Vector2(xVelocity, rb.linearVelocity.y);
 
         if (anim != null)
-            anim.SetBool("Player_run", Mathf.Abs(xInput) > 0.01f && isGrounded);
+            anim.SetBool("Player_run", xVelocity != 0f && isGrounded);
+
+        if (xVelocity != 0f && isGrounded)
+        {
+            if (!AudioManager.Instance.sfxSource.isPlaying)
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.walk);
+        }
     }
 
     private void HandleJump()
@@ -131,48 +173,82 @@ public class PlayerController : MonoBehaviour
         if (anim != null)
         {
             anim.SetBool("isGrounded", isGrounded);
-            anim.SetFloat("yVelocity", rb.velocity.y);
+            anim.SetFloat("yVelocity", rb.linearVelocity.y);
         }
 
-        bool keyboardJump = Input.GetKeyDown(jumpKey);
-        bool controllerJump = Input.GetButtonDown(jumpButton);
-
-        if ((keyboardJump || controllerJump) && isGrounded)
+        if (Input.GetKeyDown(jumpKey) && isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-
-            if (anim != null)
-                anim.SetTrigger("Player_jump");
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            if (anim != null) anim.SetTrigger("Player_jump");
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.jump);
         }
     }
 
-    public void Die()
-    {
-        TakeDamage(1);
-    }
+    public void Die() => TakeDamage(1);
 
     public void TakeDamage(int amount)
     {
         if (isDead || !canTakeDamage) return;
 
         currentHealth -= amount;
-        if (currentHealth < 0)
-            currentHealth = 0;
+        if (currentHealth < 0) currentHealth = 0;
 
-        UpdateHeartsUI();
+        UpdateHealthBar();
 
         if (currentHealth <= 0)
+        {
+            deathCount++;
+            UpdateDeathUI();
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayRandomDeathSound();
             StartCoroutine(GameOverRoutine());
+        }
         else
+        {
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayRandomDeathSound();
             StartCoroutine(RespawnAfterHitRoutine());
+        }
+    }
+
+    /// <summary>
+    /// Slot i is filled when i < currentHealth.
+    /// ON  sprite: alpha 1 = filled, 0 = empty
+    /// OFF sprite: alpha 0 = filled, 1 = empty
+    /// </summary>
+    private void UpdateHealthBar()
+    {
+        int total = Mathf.Max(srOn.Length, srOff.Length);
+
+        for (int i = 0; i < total; i++)
+        {
+            bool filled = i < currentHealth;
+
+            if (i < srOn.Length && srOn[i] != null)
+            {
+                Color c = srOn[i].color;
+                c.a = filled ? 1f : 0f;
+                srOn[i].color = c;
+            }
+
+            if (i < srOff.Length && srOff[i] != null)
+            {
+                Color c = srOff[i].color;
+                c.a = filled ? 0f : 1f;
+                srOff[i].color = c;
+            }
+        }
+    }
+
+    private void UpdateDeathUI()
+    {
+        if (deathCountText != null)
+            deathCountText.text = "Deaths: " + deathCount;
     }
 
     private IEnumerator RespawnAfterHitRoutine()
     {
         canTakeDamage = false;
 
-        rb.velocity = Vector2.zero;
-        rb.angularVelocity = 0f;
+        rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
 
         if (anim != null)
@@ -188,29 +264,19 @@ public class PlayerController : MonoBehaviour
 
         ResetAllTraps();
 
-        if (coll != null)
-            coll.enabled = false;
-
-        if (spriteRenderer != null)
-            spriteRenderer.enabled = false;
+        if (coll != null) coll.enabled = false;
+        if (spriteRenderer != null) spriteRenderer.enabled = false;
 
         yield return new WaitForSeconds(respawnDelay);
 
-        Vector3 targetPos = respawnPoint != null ? respawnPoint.position : startPosition;
-        transform.position = targetPos;
+        transform.position = respawnPoint != null ? respawnPoint.position : startPosition;
 
         rb.bodyType = originalBodyType;
-        rb.velocity = Vector2.zero;
-        rb.angularVelocity = 0f;
+        rb.linearVelocity = Vector2.zero;
         rb.gravityScale = defaultGravity;
 
-        yield return null;
-
-        if (coll != null)
-            coll.enabled = true;
-
-        if (spriteRenderer != null)
-            spriteRenderer.enabled = true;
+        if (coll != null) coll.enabled = true;
+        if (spriteRenderer != null) spriteRenderer.enabled = true;
 
         ResetAnimationToIdle();
 
@@ -221,7 +287,6 @@ public class PlayerController : MonoBehaviour
     private void ResetAnimationToIdle()
     {
         if (anim == null) return;
-
         anim.ResetTrigger("Player_death");
         anim.ResetTrigger("Player_jump");
         anim.Play("Player_Idle", 0, 0f);
@@ -235,30 +300,20 @@ public class PlayerController : MonoBehaviour
         isDead = true;
         canTakeDamage = false;
 
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Static;
 
-        if (anim != null)
-            anim.SetTrigger("Player_death");
+        if (anim != null) anim.SetTrigger("Player_death");
 
         yield return new WaitForSeconds(gameOverDelay);
+
+        UpdateHealthBar();
 
         Scene gameOverScene = SceneManager.GetSceneByName(gameOverSceneName);
         if (!gameOverScene.isLoaded)
             yield return SceneManager.LoadSceneAsync(gameOverSceneName, LoadSceneMode.Additive);
 
         Time.timeScale = 0f;
-    }
-
-    private void UpdateHeartsUI()
-    {
-        if (heartIcons == null) return;
-
-        for (int i = 0; i < heartIcons.Length; i++)
-        {
-            if (heartIcons[i] != null)
-                heartIcons[i].enabled = i < currentHealth;
-        }
     }
 
     private void ResetAllTraps()
@@ -270,18 +325,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Trap"))
-        {
-            TakeDamage(1);
-        }
+        if (collision.gameObject.CompareTag("Trap")) TakeDamage(1);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Trap"))
-        {
-            TakeDamage(1);
-        }
+        if (other.CompareTag("Trap")) TakeDamage(1);
     }
 
     private void OnDrawGizmosSelected()
